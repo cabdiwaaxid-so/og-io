@@ -1,0 +1,21 @@
+{
+  "name": "og-io",
+  "version": "1.0.0",
+  "description": "Lightweight Open Graph & Twitter Card metadata scraper for Node.js, browsers, and Deno.",
+  "main": "./index.js",
+  "keywords": [
+    "opengraph",
+    "twitter-cards",
+    "metadata",
+    "scraper",
+    "seo",
+    "og-io",
+    "link-preview"
+  ],
+  "author": "Cabdi Waaxid Siciid",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cabdiwaaxid-so/og-io"
+  }
+}
