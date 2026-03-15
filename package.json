@@ -1,8 +1,9 @@
 {
-  "name": "og-io",
-  "version": "1.0.0",
-  "description": "Lightweight Open Graph & Twitter Card metadata scraper for Node.js, browsers, and Deno.",
+  "name": "@cabdi_waaxid/og-io",
+  "version": "2.0.0",
+  "description": "Lightweight Open Graph & Twitter Card metadata scraper for Node.js, browsers,.",
   "main": "./index.js",
+  "type": "module",
   "keywords": [
     "opengraph",
     "twitter-cards",
@@ -17,5 +18,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/cabdiwaaxid-so/og-io"
+  },
+  "dependencies": {
+    "axios": "^1.13.6",
+    "cheerio": "^1.2.0",
+    "novaxjs2": "^9.4.2"
   }
 }
