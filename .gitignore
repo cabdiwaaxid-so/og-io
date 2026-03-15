@@ -1,4 +1,4 @@
-.vercel
-.git
-./node_modules
-.package-lock.json
+.vercel/
+.git/
+node_modules/
+package-lock.json
