@@ -5,10 +5,10 @@ A lightweight, universal SDK for fetching and parsing Open Graph, Twitter Card, 
 ## Features
 
 - 🚀 **Universal** - Works in browsers, Node.js, Deno, Bun, and edge environments
-- 🔧 **Flexible** - Use your own fetch implementation (node-fetch, undici, etc.)
+- 🔧 **Flexible** - Use your own backend server or the default public API
 - 📦 **Lightweight** - Zero dependencies for the client SDK
 - 🎯 **Accurate** - Properly parses Open Graph, Twitter Cards, and standard meta tags
-- 🔄 **CORS-friendly** - Built for use with your own backend API
+- 🔄 **CORS-friendly** - Built for use with your own backend API or the hosted service
 - 📝 **TypeScript** - Full type definitions included
 
 ## Installation
@@ -17,27 +17,43 @@ A lightweight, universal SDK for fetching and parsing Open Graph, Twitter Card, 
 npm install @cabdi_waaxid/og-io
 ```
 
+## Quick Start
+
+### Using the Default Public API (No Backend Required)
+
+The SDK comes pre-configured to use the public API at `https://og-io.vercel.app/` - no setup required!
+
+```javascript
+// Browser or Node.js with fetch polyfill
+import { og } from '@cabdi_waaxid/og-io';
+
+// Just works out of the box!
+const data = await og('https://github.com');
+console.log(data.standard.title); // GitHub: Let's build from here
+console.log(data.og.image); // https://github.githubassets.com/images/modules/open_graph/github-logo.png
+```
+
+### Using Your Own Backend Server
+
+You can also use your own backend server for complete control:
+
+```javascript
+import { og, setBaseUrl } from '@cabdi_waaxid/og-io';
+
+// Point to your own backend server
+setBaseUrl('https://your-og-server.com');
+
+const data = await og('https://example.com');
+```
+
 ## Architecture
 
 OG-io consists of two parts:
+
 1. **Client SDK** (this package) - Universal JavaScript library for making requests
-2. **Server API** - Your backend service that fetches and parses the actual metadata
-
-### Use the client SDK
-
-```javascript
-// client.js - Browser or Node.js
-import { og, setBaseUrl } from '@cabdi_waaxid/og-io';
-
-// Point to your backend server
-setBaseUrl('https://your-server.com');
-
-// Fetch metadata
-const data = await og('https://example.com');
-console.log(data.standard.title);
-console.log(data.og.image);
-console.log(data.twitter.card);
-```
+2. **Server API** - Backend service that fetches and parses metadata
+   - **Default Public API**: `https://og-io.vercel.app/` (free to use)
+   - **Custom Server**: You can host your own backend
 
 ## API Reference
 
@@ -58,10 +74,26 @@ Fetches Open Graph and SEO metadata from a URL.
 
 #### `setBaseUrl(url)`
 
-Sets the base URL for the OG fetcher API.
+Sets a custom base URL for the OG fetcher API.
 
 ```javascript
 setBaseUrl('https://your-og-server.com');
+```
+
+#### `resetBaseUrl()`
+
+Resets the base URL to the default public API (`https://og-io.vercel.app/`).
+
+```javascript
+resetBaseUrl();
+```
+
+#### `getBaseUrl()`
+
+Returns the current base URL being used.
+
+```javascript
+console.log(getBaseUrl()); // 'https://og-io.vercel.app/' or your custom URL
 ```
 
 #### `setFetch(fetchFn)`
@@ -72,6 +104,17 @@ Sets a custom fetch implementation (required for Node.js).
 // Node.js
 import fetch from 'node-fetch';
 setFetch(fetch);
+```
+
+### Constants
+
+#### `DEFAULT_BASE_URL`
+
+The default public API endpoint.
+
+```javascript
+import { DEFAULT_BASE_URL } from '@cabdi_waaxid/og-io';
+console.log(DEFAULT_BASE_URL); // 'https://og-io.vercel.app'
 ```
 
 ### Response Types
@@ -128,7 +171,7 @@ interface TwitterTags {
 
 ## Usage Examples
 
-### Basic Usage
+### Basic Usage with Default API
 
 ```javascript
 import { og } from '@cabdi_waaxid/og-io';
@@ -142,6 +185,21 @@ try {
 } catch (error) {
   console.error('Failed:', error.message);
 }
+```
+
+### Using Custom Backend Server
+
+```javascript
+import { og, setBaseUrl } from '@cabdi_waaxid/og-io';
+
+// Switch to your own backend
+setBaseUrl('https://my-og-server.com');
+
+// All subsequent calls will use your server
+const data = await og('https://example.com');
+
+// Switch back to default public API if needed
+resetBaseUrl();
 ```
 
 ### Include All Meta Tags
@@ -170,13 +228,13 @@ console.log(data.html.substring(0, 200) + '...');
 ### Node.js with node-fetch
 
 ```javascript
-import { og, setFetch, setBaseUrl } from '@cabdi_waaxid/og-io';
+import { og, setFetch } from '@cabdi_waaxid/og-io';
 import fetch from 'node-fetch';
 
 // Required for Node.js environments
 setFetch(fetch);
-setBaseUrl('https://your-og-server.com');
 
+// Uses default public API at https://og-io.vercel.app
 const data = await og('https://example.com');
 ```
 
@@ -186,11 +244,13 @@ const data = await og('https://example.com');
 <script src="https://cdn.jsdelivr.net/npm/@cabdi_waaxid/og-io@latest/index.js"></script>
 <script>
   // Available as window.ogFetcher
-  ogFetcher.setBaseUrl('https://your-server.com');
-  
+  // Uses default public API automatically
   ogFetcher.og('https://example.com').then(data => {
     console.log(data.og.title);
   });
+  
+  // Or use your own server
+  ogFetcher.setBaseUrl('https://your-server.com');
 </script>
 ```
 
@@ -198,7 +258,7 @@ const data = await og('https://example.com');
 
 ```javascript
 // Named imports
-import { og, setBaseUrl, setFetch } from '@cabdi_waaxid/og-io';
+import { og, setBaseUrl, resetBaseUrl, DEFAULT_BASE_URL } from '@cabdi_waaxid/og-io';
 
 // Default import
 import ogFetcher from '@cabdi_waaxid/og-io';
@@ -211,7 +271,7 @@ ogFetcher.og('https://example.com');
 try {
   const data = await og('https://example.com');
 } catch (error) {
-  console.error(error.message); // "Request failed with status 404: Not Found"
+  console.error(error.message);
 }
 ```
 
@@ -219,24 +279,34 @@ try {
 
 | Environment | Support | Notes |
 |------------|---------|-------|
-| Browsers | ✅ Full | Uses native fetch |
-| Node.js | ✅ Full | Requires setFetch() |
-| Deno | ✅ Full | Uses native fetch |
-| Bun | ✅ Full | Uses native fetch |
-| Cloudflare Workers | ✅ Full | Uses native fetch |
-| React Native | ✅ Full | May need polyfill |
+| Browsers | ✅ Full | Uses native fetch, default API works out of the box |
+| Node.js | ✅ Full | Requires setFetch(), default API works with polyfill |
+| Deno | ✅ Full | Uses native fetch, default API works out of the box |
+| Bun | ✅ Full | Uses native fetch, default API works out of the box |
+| Cloudflare Workers | ✅ Full | Uses native fetch, default API works out of the box |
+| React Native | ✅ Full | May need polyfill, default API works with fetch support |
 
-### Using the Included Server
+The default public API at `https://og-io.vercel.app/` is free to use. For production applications with high volume, consider [hosting your own backend server](#hosting-your-own-backend-server).
+
+## Hosting Your Own Backend Server
 
 The package includes a sample server using `novaxjs2`:
+
+[Server file code](https://github.com/cabdiwaaxid-so/og-io/api/index.js)
 
 ```bash
 # Install server dependencies
 npm install axios cheerio novaxjs2
 
 # Run the server
-node server.js
+node index.js
 # Server running on port 3000
+```
+
+Then configure your client:
+
+```javascript
+setBaseUrl('http://localhost:3000');
 ```
 
 ## TypeScript Support
@@ -259,7 +329,7 @@ if (data.og.image) {
 
 ## License
 
-MIT © Cabdi Waaxid Siciid
+[MIT © Cabdi Waaxid Siciid](https://github.com/cabdiwaaxid-so/og-io/src/LICENSE)
 
 ## Contributing
 
