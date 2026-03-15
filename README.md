@@ -292,7 +292,7 @@ The default public API at `https://og-io.vercel.app/` is free to use. For produc
 
 The package includes a sample server using `novaxjs2`:
 
-[Server file code](https://github.com/cabdiwaaxid-so/og-io/api/index.js)
+[Server file code](https://github.com/cabdiwaaxid-so/og-io/tree/main/api/index.js)
 
 ```bash
 # Install server dependencies
@@ -329,7 +329,7 @@ if (data.og.image) {
 
 ## License
 
-[MIT © Cabdi Waaxid Siciid](https://github.com/cabdiwaaxid-so/og-io/src/LICENSE)
+[MIT © Cabdi Waaxid Siciid](https://github.com/cabdiwaaxid-so/og-io/tree/main/src/LICENSE)
 
 ## Contributing
 
