@@ -1,7 +1,7 @@
 {
   "name": "@cabdi_waaxid/og-io",
-  "version": "2.0.0",
-  "description": "Lightweight Open Graph & Twitter Card metadata scraper for Node.js, browsers,.",
+  "version": "2.1.0",
+  "description": "Lightweight and optimized Open Graph & Twitter Card metadata scraper for Node.js (Vercel-ready).",
   "main": "./index.js",
   "type": "module",
   "keywords": [
@@ -11,7 +11,9 @@
     "scraper",
     "seo",
     "og-io",
-    "link-preview"
+    "link-preview",
+    "vercel",
+    "serverless"
   ],
   "author": "Cabdi Waaxid Siciid",
   "license": "MIT",
@@ -20,8 +22,7 @@
     "url": "https://github.com/cabdiwaaxid-so/og-io"
   },
   "dependencies": {
-    "axios": "^1.13.6",
-    "cheerio": "^1.2.0",
-    "novaxjs2": "^9.4.2"
+    "@vercel/kv": "^1.0.1",
+    "cheerio": "^1.2.0"
   }
 }
